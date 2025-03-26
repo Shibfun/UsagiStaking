@@ -560,8 +560,6 @@
             try {
                 stakeButton.classList.add('loading');
                 const weiAmount = web3.utils.toWei(amount.toString(), 'ether');
-                showModal('Approving USAGI for staking...');
-                await usagiContract.methods.approve(USAGI_CONTRACT_ADDRESS, weiAmount).send({ from: accounts[0] });
                 showModal(`Staking ${amount} USAGI...`);
                 await usagiContract.methods.stakeUsagi(weiAmount).send({ from: accounts[0] });
                 showModal(`Successfully staked ${amount} USAGI!`);
