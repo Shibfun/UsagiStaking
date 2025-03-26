@@ -1,1 +1,698 @@
-test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usagi Staking DApp</title>
+    <link rel="icon" type="image/png" href="images/usagi.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('images/background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(5px);
+            z-index: -1;
+        }
+        .header, .container, footer, .modal { position: relative; z-index: 1; }
+        .header { padding: 15px 0; text-align: center; width: 100%; }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 40px;
+        }
+        .header-top .balance { font-size: 1.2em; color: #F4A261; font-weight: bold; }
+        .header-top .actions { display: flex; gap: 12px; }
+        .action-btn {
+            background: #34495E;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .action-btn:hover { background: #F4A261; }
+        .header-content { padding: 15px 0; }
+        .header-content h1 {
+            font-size: 1.8em;
+            color: #F4A261;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .profile-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .nickname { font-size: 1.1em; font-weight: bold; color: #A8B5D4; margin-right: 5px; }
+        .miner-gif {
+            width: 80px;
+            height: 80px;
+            background: url('images/miner.gif') no-repeat center;
+            background-size: contain;
+            margin: 0 auto 10px;
+        }
+        .miner-prompt {
+            font-size: 0.9em;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+            animation: fade 3s infinite;
+        }
+        @keyframes fade { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 0 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .section {
+            background: rgba(44, 62, 80, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 1px solid #F4A261;
+        }
+        .section-title {
+            font-size: 1.3em;
+            color: #F4A261;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            background: #F4A261;
+            color: #fff;
+            border: none;
+            padding: 12px 0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            background: #E07A5F;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+        }
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        button.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        input {
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: #34495E;
+            color: #fff;
+            font-size: 1em;
+            text-align: center;
+            transition: box-shadow 0.3s, background 0.3s;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 8px #F4A261;
+            background: #3A536B;
+        }
+        .percentage-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .percentage-btn {
+            background: #F4A261;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        .percentage-btn:hover {
+            background: #E07A5F;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .info-panel {
+            background: #34495E;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #fff;
+            line-height: 1.6;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #2C3E50;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            color: #fff;
+            max-width: 320px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .modal-content p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .modal-content button {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.95em;
+        }
+        footer {
+            background: rgba(30, 42, 68, 0.8);
+            text-align: center;
+            padding: 15px;
+            width: 100%;
+            color: #A8B5D4;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+        @media (max-width: 480px) {
+            .header-content h1 { font-size: 1.5em; }
+            .miner-gif { width: 60px; height: 60px; }
+            button { padding: 10px 0; font-size: 0.9em; max-width: 180px; }
+            input { font-size: 0.9em; padding: 10px; }
+            .percentage-btn { padding: 8px 12px; font-size: 0.85em; }
+            .miner-prompt { font-size: 0.8em; }
+            .nickname { font-size: 1em; }
+            .section { padding: 15px; }
+            .container { max-width: 100%; padding: 0 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-top">
+            <span id="usagiBalance">0 USAGI</span>
+            <div class="actions">
+                <button class="action-btn" onclick="window.open('https://x.com/feedcto', '_blank')"><i class="fab fa-twitter"></i></button>
+                <button class="action-btn" onclick="window.open('https://t.me/feedcto', '_blank')"><i class="fab fa-telegram-plane"></i></button>
+            </div>
+        </div>
+        <div class="header-content">
+            <h1>Usagi Staking</h1>
+            <div class="profile-section">
+                <span class="nickname" id="userNickname">Not connected</span>
+            </div>
+            <div class="miner-gif"></div>
+            <div class="miner-prompt" id="minerPrompt"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="section">
+            <div class="section-title">Connect Wallet</div>
+            <div class="button-group">
+                <button id="connectButton">Connect MetaMask</button>
+            </div>
+            <div class="info-panel">Wallet: <span id="walletAddress">Not connected</span></div>
+        </div>
+        <div class="section" id="lpStakeSection">
+            <div class="section-title">Stake LP</div>
+            <div class="input-group">
+                <input type="text" id="stakeLPAmountInput" placeholder="Enter LP Amount">
+            </div>
+            <div class="percentage-buttons">
+                <button class="percentage-btn" onclick="setLPStakePercentage(25)">25%</button>
+                <button class="percentage-btn" onclick="setLPStakePercentage(50)">50%</button>
+                <button class="percentage-btn" onclick="setLPStakePercentage(75)">75%</button>
+                <button class="percentage-btn" onclick="setLPStakePercentage(100)">100%</button>
+            </div>
+            <div class="button-group">
+                <button id="stakeLPButton">Stake LP</button>
+                <button id="unstakeLPButton" disabled>Unstake All</button>
+                <button id="claimRewardsButton">Claim Rewards</button>
+            </div>
+            <div class="info-panel" id="lpStakeInfo">LP Staked: 0<br>Rewards: 0 USAGI</div>
+        </div>
+        <div class="section" id="usagiStakeSection">
+            <div class="section-title">Stake USAGI</div>
+            <div class="input-group">
+                <input type="text" id="stakeUsagiAmountInput" placeholder="Enter USAGI Amount">
+            </div>
+            <div class="percentage-buttons">
+                <button class="percentage-btn" onclick="setUsagiStakePercentage(25)">25%</button>
+                <button class="percentage-btn" onclick="setUsagiStakePercentage(50)">50%</button>
+                <button class="percentage-btn" onclick="setUsagiStakePercentage(75)">75%</button>
+                <button class="percentage-btn" onclick="setUsagiStakePercentage(100)">100%</button>
+            </div>
+            <div class="button-group">
+                <button id="stakeUsagiButton">Stake USAGI</button>
+                <button id="unstakeUsagiButton" disabled>Unstake All</button>
+                <button id="claimRewardsButtonUsagi">Claim Rewards</button>
+            </div>
+            <div class="info-panel" id="usagiStakeInfo">USAGI Staked: 0<br>Rewards: 0 USAGI</div>
+        </div>
+    </div>
+    <footer>Powered by Shibarium © 2025</footer>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()">OK</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+    <script>
+        let web3, accounts, usagiContract, lpContract;
+        const USAGI_CONTRACT_ADDRESS = "0x7c08846e8E41951b8ACc3316fd66b607cF5719C0";
+        const LP_TOKEN_ADDRESS = "0x4930Ba3d49d277e7832a7Eb33E56B2C2fA8Bd15a";
+        const USAGI_ABI = [
+            {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"LPStaked","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"LPUnstaked","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"UsagiStaked","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"UsagiUnstaked","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"lpReward","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"usagiReward","type":"uint256"}],"name":"RewardClaimed","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount0","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1","type":"uint256"}],"name":"FeesClaimed","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserStake","outputs":[{"internalType":"uint256","name":"lpAmount","type":"uint256"},{"internalType":"uint256","name":"usagiAmount","type":"uint256"},{"internalType":"uint256","name":"userStartTime","type":"uint256"},{"internalType":"uint256","name":"lpReward","type":"uint256"},{"internalType":"uint256","name":"usagiReward","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getPendingRewards","outputs":[{"internalType":"uint256","name":"lpReward","type":"uint256"},{"internalType":"uint256","name":"usagiReward","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"claimRewards","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"stakeLP","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"stakeUsagi","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"unstakeLP","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"unstakeUsagi","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"feeOwner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getRemainingRewards","outputs":[{"internalType":"uint256","name":"lpRemaining","type":"uint256"},{"internalType":"uint256","name":"usagiRemaining","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getTotalStaked","outputs":[{"internalType":"uint256","name":"totalLP","type":"uint256"},{"internalType":"uint256","name":"totalUsagi","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserHistory","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"lpRewardsDistributed","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"lpToken","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"renounceTokenOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"startTime","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"tokenOwner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"totalLPStaked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"totalUsagiStaked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"usagiRewardsDistributed","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"userInfo","outputs":[{"internalType":"uint256","name":"lpAmount","type":"uint256"},{"internalType":"uint256","name":"usagiAmount","type":"uint256"},{"internalType":"uint256","name":"lpRewardDebt","type":"uint256"},{"internalType":"uint256","name":"usagiRewardDebt","type":"uint256"},{"internalType":"uint256","name":"lastUpdate","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+        const LP_ABI = [
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+        const shibariumMainnet = {
+            chainId: 109,
+            chainName: 'Shibarium',
+            nativeCurrency: { name: 'BONE', symbol: 'BONE', decimals: 18 },
+            rpcUrls: ['https://www.shibrpc.com'],
+            blockExplorerUrls: ['https://shibariumscan.io']
+        };
+        const prompts = [
+            "Stake LP and USAGI to earn rewards!",
+            "Boost your staking for more USAGI!",
+            "Start staking now and grow your USAGI!",
+            "Maximize rewards with LP staking!",
+            "Join the staking pool today!"
+        ];
+        let promptIndex = 0;
+
+        function showModal(message) {
+            document.getElementById('modalMessage').innerHTML = message;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function updatePrompt() {
+            document.getElementById('minerPrompt').innerText = prompts[promptIndex];
+            promptIndex = (promptIndex + 1) % prompts.length;
+        }
+
+        async function updateUsagiBalance() {
+            if (!web3 || !usagiContract || !accounts) return;
+            const balance = await usagiContract.methods.balanceOf(accounts[0]).call();
+            document.getElementById('usagiBalance').innerText = `${parseFloat(web3.utils.fromWei(balance, 'ether')).toFixed(2)} USAGI`;
+        }
+
+        async function updateLPStakeInfo() {
+            if (!web3 || !usagiContract || !accounts) {
+                document.getElementById('lpStakeInfo').innerHTML = 'LP Staked: 0<br>Rewards: 0 USAGI';
+                document.getElementById('unstakeLPButton').disabled = true;
+                return;
+            }
+            const stakeInfo = await usagiContract.methods.getUserStake(accounts[0]).call();
+            const lpAmount = parseFloat(web3.utils.fromWei(stakeInfo[0], 'ether')).toFixed(2);
+            const lpReward = parseFloat(web3.utils.fromWei(stakeInfo[3], 'ether')).toFixed(4);
+            document.getElementById('lpStakeInfo').innerHTML = `LP Staked: ${lpAmount}<br>Rewards: ${lpReward} USAGI`;
+            document.getElementById('unstakeLPButton').disabled = stakeInfo[0] === '0';
+        }
+
+        async function updateUsagiStakeInfo() {
+            if (!web3 || !usagiContract || !accounts) {
+                document.getElementById('usagiStakeInfo').innerHTML = 'USAGI Staked: 0<br>Rewards: 0 USAGI';
+                document.getElementById('unstakeUsagiButton').disabled = true;
+                return;
+            }
+            const stakeInfo = await usagiContract.methods.getUserStake(accounts[0]).call();
+            const usagiAmount = parseFloat(web3.utils.fromWei(stakeInfo[1], 'ether')).toFixed(2);
+            const usagiReward = parseFloat(web3.utils.fromWei(stakeInfo[4], 'ether')).toFixed(4);
+            document.getElementById('usagiStakeInfo').innerHTML = `USAGI Staked: ${usagiAmount}<br>Rewards: ${usagiReward} USAGI`;
+            document.getElementById('unstakeUsagiButton').disabled = stakeInfo[1] === '0';
+        }
+
+        async function updateUserAddress() {
+            if (!accounts) {
+                document.getElementById('userNickname').innerText = 'Not connected';
+                document.getElementById('walletAddress').innerText = 'Not connected';
+            } else {
+                const shortAddress = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
+                document.getElementById('userNickname').innerText = shortAddress;
+                document.getElementById('walletAddress').innerText = shortAddress;
+            }
+        }
+
+        async function connectWallet() {
+            const connectButton = document.getElementById('connectButton');
+            try {
+                if (!window.ethereum) {
+                    showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.');
+                    return;
+                }
+                connectButton.classList.add('loading');
+                web3 = new Web3(window.ethereum);
+                accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (!accounts.length) {
+                    showModal('Please unlock your wallet or connect it.');
+                    return;
+                }
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 109) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: web3.utils.numberToHex(109) }]
+                        });
+                    } catch (switchError) {
+                        if (switchError.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [shibariumMainnet]
+                            });
+                        } else {
+                            showModal('Failed to switch network. Please add Shibarium manually.');
+                            return;
+                        }
+                    }
+                }
+                usagiContract = new web3.eth.Contract(USAGI_ABI, USAGI_CONTRACT_ADDRESS);
+                lpContract = new web3.eth.Contract(LP_ABI, LP_TOKEN_ADDRESS);
+                showModal('Connected to Shibarium successfully!');
+                updateUserAddress();
+                updateUsagiBalance();
+                updateLPStakeInfo();
+                updateUsagiStakeInfo();
+            } catch (error) {
+                showModal(`Connection failed: ${error.message}`);
+            } finally {
+                connectButton.classList.remove('loading');
+            }
+        }
+
+        async function stakeLP() {
+            if (!web3 || !usagiContract || !lpContract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
+            const stakeButton = document.getElementById('stakeLPButton');
+            const amount = document.getElementById('stakeLPAmountInput').value;
+            if (!amount || amount <= 0) {
+                showModal('Please enter a valid LP amount!');
+                return;
+            }
+            try {
+                stakeButton.classList.add('loading');
+                const weiAmount = web3.utils.toWei(amount, 'ether');
+                showModal('Approving LP for staking...');
+                await lpContract.methods.approve(USAGI_CONTRACT_ADDRESS, weiAmount).send({ from: accounts[0] });
+                showModal(`Staking ${amount} LP...`);
+                await usagiContract.methods.stakeLP(weiAmount).send({ from: accounts[0] });
+                showModal(`Successfully staked ${amount} LP!`);
+                updateUsagiBalance();
+                updateLPStakeInfo();
+            } catch (error) {
+                showModal(`Staking failed: ${error.message}`);
+            } finally {
+                stakeButton.classList.remove('loading');
+            }
+        }
+
+        async function unstakeLP() {
+            if (!web3 || !usagiContract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
+            const unstakeButton = document.getElementById('unstakeLPButton');
+            try {
+                unstakeButton.classList.add('loading');
+                showModal('Unstaking all LP and claiming rewards...');
+                await usagiContract.methods.unstakeLP().send({ from: accounts[0] });
+                showModal('Successfully unstaked all LP!');
+                updateUsagiBalance();
+                updateLPStakeInfo();
+            } catch (error) {
+                showModal(`Unstaking failed: ${error.message}`);
+            } finally {
+                unstakeButton.classList.remove('loading');
+            }
+        }
+
+        async function claimRewards() {
+            if (!web3 || !usagiContract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
+            const claimButton = document.getElementById('claimRewardsButton');
+            try {
+                claimButton.classList.add('loading');
+                showModal('Claiming rewards...');
+                await usagiContract.methods.claimRewards().send({ from: accounts[0] });
+                showModal('Successfully claimed rewards!');
+                updateUsagiBalance();
+                updateLPStakeInfo();
+                updateUsagiStakeInfo();
+            } catch (error) {
+                showModal(`Claim failed: ${error.message}`);
+            } finally {
+                claimButton.classList.remove('loading');
+            }
+        }
+
+        async function stakeUsagi() {
+            if (!web3 || !usagiContract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
+            const stakeButton = document.getElementById('stakeUsagiButton');
+            const amount = document.getElementById('stakeUsagiAmountInput').value;
+            if (!amount || amount <= 0) {
+                showModal('Please enter a valid USAGI amount!');
+                return;
+            }
+            try {
+                stakeButton.classList.add('loading');
+                const weiAmount = web3.utils.toWei(amount, 'ether');
+                showModal('Approving USAGI for staking...');
+                await usagiContract.methods.approve(USAGI_CONTRACT_ADDRESS, weiAmount).send({ from: accounts[0] });
+                showModal(`Staking ${amount} USAGI...`);
+                await usagiContract.methods.stakeUsagi(weiAmount).send({ from: accounts[0] });
+                showModal(`Successfully staked ${amount} USAGI!`);
+                updateUsagiBalance();
+                updateUsagiStakeInfo();
+            } catch (error) {
+                showModal(`Staking failed: ${error.message}`);
+            } finally {
+                stakeButton.classList.remove('loading');
+            }
+        }
+
+        async function unstakeUsagi() {
+            if (!web3 || !usagiContract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
+            const unstakeButton = document.getElementById('unstakeUsagiButton');
+            try {
+                unstakeButton.classList.add('loading');
+                showModal('Unstaking all USAGI and claiming rewards...');
+                await usagiContract.methods.unstakeUsagi().send({ from: accounts[0] });
+                showModal('Successfully unstaked all USAGI!');
+                updateUsagiBalance();
+                updateUsagiStakeInfo();
+            } catch (error) {
+                showModal(`Unstaking failed: ${error.message}`);
+            } finally {
+                unstakeButton.classList.remove('loading');
+            }
+        }
+
+        async function claimRewardsUsagi() {
+            if (!web3 || !usagiContract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
+            const claimButton = document.getElementById('claimRewardsButtonUsagi');
+            try {
+                claimButton.classList.add('loading');
+                showModal('Claiming rewards...');
+                await usagiContract.methods.claimRewards().send({ from: accounts[0] });
+                showModal('Successfully claimed rewards!');
+                updateUsagiBalance();
+                updateLPStakeInfo();
+                updateUsagiStakeInfo();
+            } catch (error) {
+                showModal(`Claim failed: ${error.message}`);
+            } finally {
+                claimButton.classList.remove('loading');
+            }
+        }
+
+        async function setLPStakePercentage(percentage) {
+            if (!web3 || !lpContract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
+            const balance = await lpContract.methods.balanceOf(accounts[0]).call();
+            const lpBalance = parseFloat(web3.utils.fromWei(balance, 'ether'));
+            const stakeAmount = (lpBalance * percentage / 100).toFixed(2);
+            document.getElementById('stakeLPAmountInput').value = stakeAmount > 0 ? stakeAmount : 0;
+        }
+
+        async function setUsagiStakePercentage(percentage) {
+            if (!web3 || !usagiContract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
+            const balance = await usagiContract.methods.balanceOf(accounts[0]).call();
+            const usagiBalance = parseFloat(web3.utils.fromWei(balance, 'ether'));
+            const stakeAmount = (usagiBalance * percentage / 100).toFixed(2);
+            document.getElementById('stakeUsagiAmountInput').value = stakeAmount > 0 ? stakeAmount : 0;
+        }
+
+        setInterval(updatePrompt, 3000);
+        setInterval(() => {
+            updateUsagiBalance();
+            updateLPStakeInfo();
+            updateUsagiStakeInfo();
+        }, 5000);
+
+        document.getElementById('connectButton').addEventListener('click', connectWallet);
+        document.getElementById('stakeLPButton').addEventListener('click', stakeLP);
+        document.getElementById('unstakeLPButton').addEventListener('click', unstakeLP);
+        document.getElementById('claimRewardsButton').addEventListener('click', claimRewards);
+        document.getElementById('stakeUsagiButton').addEventListener('click', stakeUsagi);
+        document.getElementById('unstakeUsagiButton').addEventListener('click', unstakeUsagi);
+        document.getElementById('claimRewardsButtonUsagi').addEventListener('click', claimRewardsUsagi);
+
+        window.ethereum?.on('chainChanged', (chainId) => {
+            if (parseInt(chainId, 16) !== 109) {
+                showModal('Switched to wrong network. Please reconnect to Shibarium.');
+                web3 = null;
+                usagiContract = null;
+                lpContract = null;
+                accounts = null;
+                updateUserAddress();
+            } else {
+                connectWallet();
+            }
+        });
+
+        window.ethereum?.on('accountsChanged', (newAccounts) => {
+            if (newAccounts.length) {
+                connectWallet();
+            } else {
+                showModal('Wallet disconnected. Please reconnect.');
+                web3 = null;
+                usagiContract = null;
+                lpContract = null;
+                accounts = null;
+                updateUserAddress();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (!window.location.protocol.startsWith('http')) {
+                showModal('Please run this page via a local server (e.g., "npx serve") to connect MetaMask.');
+            } else if (!window.ethereum) {
+                showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.');
+            }
+        });
+    </script>
+</body>
+</html>
