@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usagi Staking Whitepaper</title>
+    <link rel="icon" type="image/png" href="images/usagi.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #FFE4E9;
+            color: #5A4A6F;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: #FFF5F7;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #FFD1D9;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #FF8A9D;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #FF8A9D;
+            margin: 30px 0 15px;
+        }
+        p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style-type: none;
+            margin-bottom: 20px;
+        }
+        li {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        li:before {
+            content: '✿';
+            position: absolute;
+            left: 0;
+            color: #FF8A9D;
+        }
+        .highlight {
+            background: #FFD1D9;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        footer {
+            background: #FFD1D9;
+            text-align: center;
+            padding: 15px;
+            width: 100%;
+            color: #5A4A6F;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            p, li { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Usagi Staking Whitepaper</h1>
+
+        <div class="section">
+            <h2>Hiii, Welcome to Usagi Staking! ✿</h2>
+            <p>Oh, hello there, little friend! We’re so happy to see you in the adorable world of Usagi Staking! This is a super fun place on the Shibarium blockchain where you can grow your USAGI tokens with a big smile! 🌸</p>
+            <p>With Usagi Staking, you can stake your LP tokens (vAMM-CHIKA/WBONE) and USAGI tokens to earn more USAGI as a sweet reward! It’s as easy as picking flowers, and we’ll show you how to join the fun!</p>
+        </div>
+
+        <div class="section">
+            <h2>What’s Usagi Staking All About? 🌟</h2>
+            <p>Usagi Staking is like a little garden where you can plant your tokens to help the Shibarium community bloom! By staking, you’re giving a big hug to the network, and in return, you’ll get more USAGI tokens to make you happy! 💖</p>
+            <p>We have two cute ways to stake:</p>
+            <ul>
+                <li><span class="highlight">LP Staking</span>: Plant your vAMM-CHIKA/WBONE LP tokens to grow USAGI rewards!</li>
+                <li><span class="highlight">USAGI Staking</span>: Plant your USAGI tokens to grow even more USAGI!</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Let’s Stake and Grow Together! 🌱</h2>
+            <p>Here’s how you can start your happy staking journey with Usagi:</p>
+            <ul>
+                <li><strong>Stake LP Tokens</strong>: You can stake your LP tokens in bundles of 1,000,000 or more (like 1,000,000, 2,000,000, and so on). For every 1,000,000 LP tokens you stake, you’ll get 500 USAGI per block at the beginning! Yay!</li>
+                <li><strong>Stake USAGI Tokens</strong>: You can stake your USAGI tokens in bundles of 10,000 or more (like 10,000, 20,000, and so on). For every 10,000 USAGI you stake, you’ll get 0.025 USAGI per block at the start! So cute!</li>
+                <li><strong>Grow Your Rewards</strong>: Your rewards grow every block, which is about 5 seconds on Shibarium. You can pick your rewards anytime you want, or they’ll magically appear when you stake more or take your tokens back!</li>
+            </ul>
+            <p>Let’s look at some examples:</p>
+            <ul>
+                <li>If you stake 1,000,000 LP tokens and wait for 100 blocks, you’ll get 500 * 100 = 50,000 USAGI! Wow, so many!</li>
+                <li>If you stake 10,000 USAGI tokens and wait for 100 blocks, you’ll get 0.025 * 100 = 2.5 USAGI! A little treat for you!</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Rewards Get a Little Smaller Over Time 🌼</h2>
+            <p>We want to make sure everyone gets a chance to enjoy Usagi Staking for a long, long time, so the rewards will slowly get a tiny bit smaller as time goes on. Don’t worry, it’s still super fun! Here’s how it works on Shibarium:</p>
+            <ul>
+                <li><strong>Every 600,000 blocks</strong> (about 35 days on Shibarium, since each block is 5 seconds), the rewards shrink a little bit.</li>
+                <li><strong>For LP Staking</strong>: You start with 500 USAGI per block for every 1,000,000 LP tokens. Then it changes like this:</li>
+                <ul>
+                    <li>After 600,000 blocks (35 days): 490 USAGI per block.</li>
+                    <li>After 1,200,000 blocks (70 days): 480 USAGI per block.</li>
+                    <li>After 1,800,000 blocks (105 days): 470 USAGI per block.</li>
+                    <li>After 2,400,000 blocks (140 days): 460 USAGI per block.</li>
+                    <li>…and so on!</li>
+                    <li>After 29,400,000 blocks (about 1,700 days), it reaches the smallest amount: 10 USAGI per block for every 1,000,000 LP tokens.</li>
+                </ul>
+                <li><strong>For USAGI Staking</strong>: You start with 0.025 USAGI per block for every 10,000 USAGI tokens. Then it changes like this:</li>
+                <ul>
+                    <li>After 600,000 blocks (35 days): 0.0245 USAGI per block.</li>
+                    <li>After 1,200,000 blocks (70 days): 0.024 USAGI per block.</li>
+                    <li>After 1,800,000 blocks (105 days): 0.0235 USAGI per block.</li>
+                    <li>After 2,400,000 blocks (140 days): 0.023 USAGI per block.</li>
+                    <li>…and so on!</li>
+                    <li>After 29,400,000 blocks (about 1,700 days), it reaches the smallest amount: 0.0005 USAGI per block for every 10,000 USAGI tokens.</li>
+                </ul>
+            </ul>
+            <p>Even when the rewards get smaller, you’ll still be earning USAGI tokens for your staking efforts! It’s like getting a little sprinkle of magic every day! ✨</p>
+        </div>
+
+        <div class="section">
+            <h2>Pick Your Rewards Anytime! 🍓</h2>
+            <p>You can pick your USAGI rewards whenever you feel like it! There’s no waiting time at all, so you can collect your shiny tokens anytime you want. You’ll also get your rewards automatically when you stake more tokens or take your tokens back. So easy, right? 🌈</p>
+            <p>Just a tiny reminder: You need to have some tokens staked (either LP or USAGI) to get rewards. If you don’t have anything staked, there won’t be any rewards to pick up, okay?</p>
+        </div>
+
+        <div class="section">
+            <h2>Fees and Little Extras 🌟</h2>
+            <p>When you stake or take back your LP tokens, we’ll collect any fees that the LP tokens make (like trading fees) and give them to the Usagi team to help our project grow even more! This doesn’t cost you anything extra—it’s just a little thank-you to the team for taking care of Usagi! 💕</p>
+            <p>Staking USAGI tokens is completely free, with no fees at all! You can stake and unstake as much as you like without any worries.</p>
+        </div>
+
+        <div class="section">
+            <h2>Total Rewards to Share! 🍬</h2>
+            <p>We’ve set aside 1 trillion USAGI tokens just for staking rewards! That’s a lot of tokens to share with all our friends! Once all these tokens are given out, the staking program will end, and no more rewards will be made. This way, everyone gets a fair chance to join the fun for a long time! 🌟</p>
+        </div>
+
+        <div class="section">
+            <h2>Why You’ll Love Staking with Usagi! 🐾</h2>
+            <p>Staking with Usagi is like going on a happy adventure with your best friends! Here’s why you’ll love it:</p>
+            <ul>
+                <li><strong>Super Easy and Fun</strong>: Staking is as simple as a hop, and our cute Usagi theme makes it so much fun!</li>
+                <li><strong>Pick Anytime</strong>: You can collect your rewards whenever you want, with no waiting at all!</li>
+                <li><strong>Lots of Rewards</strong>: Earn USAGI tokens just by staking your LP or USAGI tokens. Yay!</li>
+                <li><strong>Helping Friends</strong>: Your staking helps the Usagi project grow, and we’re so thankful for your love!</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Come Join Us on Shibarium! 🌸</h2>
+            <p>Are you ready to start your staking adventure with Usagi on Shibarium? Connect your wallet, stake your tokens, and watch your USAGI grow like a happy little flower! We can’t wait to see you in our adorable staking world! Let’s have fun together! 💖</p>
+        </div>
+    </div>
+    <footer>Powered by Shibarium © 2025</footer>
+</body>
+</html>
